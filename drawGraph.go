@@ -22,8 +22,10 @@ type DrawObject struct {
 }
 
 var (
-	instance *DrawObject = nil
-	radius               = 5.0
+	instance            *DrawObject = nil
+	radius                          = 5.0
+	lineWidth                       = 3.0
+	maxHeight, maxWidth float64
 )
 
 func Instance() *DrawObject {
@@ -36,27 +38,18 @@ func Instance() *DrawObject {
 
 // Overrides current image with new image
 func (i *DrawObject) NewImage(width, height float64) {
+	maxHeight = height
+	maxWidth = width
 	i.im = image.NewRGBA(image.Rect(0, 0, int(width), int(height)))
 	i.gC = draw2d.NewGraphicContext(i.im)
 
 	white := color.NRGBA{0xff, 0xff, 0xff, 0xff}
 	i.gC.SetFillColor(white)
-	i.gC.SetStrokeColor(image.Black)
-	i.gC.MoveTo(0.0, 0.0)
-	i.gC.LineTo(width, 0.0)
-	i.gC.Stroke()
-	i.gC.MoveTo(width, 0.0)
-	i.gC.LineTo(width, height)
-	i.gC.Stroke()
-	i.gC.MoveTo(width, height)
-	i.gC.LineTo(0, height)
-	i.gC.Stroke()
-	i.gC.MoveTo(0.0, height)
-	i.gC.LineTo(0.0, 0.0)
-	i.gC.Stroke()
+	draw2d.Rect(i.gC, 0, 0, width, height)
 	i.gC.Fill()
 	green := color.NRGBA{0x00, 0x66, 0x66, 0xff}
 	i.gC.SetFillColor(green)
+	i.gC.SetLineWidth(lineWidth)
 }
 
 func (i *DrawObject) SaveImage(name string) error {
@@ -85,9 +78,29 @@ func (i *DrawObject) SaveImage(name string) error {
 	return nil
 }
 
-func (i *DrawObject) AddPoint(x, y float64) {
+func (i *DrawObject) AddPoint(x, y float64) error {
+	if x < 0 || y < 0 {
+		return errors.New("Coordinate < 0 !!")
+	}
+	if x > maxWidth || y > maxHeight {
+		return errors.New("Coordinate > maximum")
+	}
 	draw2d.Circle(i.gC, x, y, radius)
+	i.gC.Fill()
+	return nil
+}
+
+func (i *DrawObject) AddLine(x1, y1, x2, y2 float64) error {
+	if x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 {
+		return errors.New("Coordinate < 0 !!")
+	}
+	if x1 > maxWidth || x2 > maxWidth || y1 > maxHeight || y2 > maxHeight {
+		return errors.New("Coordinate > maximum")
+	}
+	i.gC.MoveTo(x1, y1)
+	i.gC.LineTo(x2, y2)
 	i.gC.Stroke()
+	return nil
 }
 
 func (i *DrawObject) PrintSomething() {
