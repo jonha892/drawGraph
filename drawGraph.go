@@ -85,20 +85,22 @@ func (i *DrawObject) AddPoint(x, y float64) error {
 	if x > maxWidth || y > maxHeight {
 		return errors.New("Coordinate > maximum")
 	}
-	draw2d.Circle(i.gC, x, y, radius)
+	fmt.Println("Add point ", x, " ", y)
+	draw2d.Circle(i.gC, x, maxHeight-y, radius)
 	i.gC.Fill()
 	return nil
 }
 
 func (i *DrawObject) AddLine(x1, y1, x2, y2 float64) error {
+	fmt.Println("Line from: ", x1, " ", y1, " to ", x2, " ", y2)
 	if x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 {
 		return errors.New("Coordinate < 0 !!")
 	}
 	if x1 > maxWidth || x2 > maxWidth || y1 > maxHeight || y2 > maxHeight {
 		return errors.New("Coordinate > maximum")
 	}
-	i.gC.MoveTo(x1, y1)
-	i.gC.LineTo(x2, y2)
+	i.gC.MoveTo(x1, maxHeight-y1)
+	i.gC.LineTo(x2, maxHeight-y2)
 	i.gC.Stroke()
 	return nil
 }
