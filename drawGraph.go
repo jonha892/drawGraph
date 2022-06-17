@@ -32,7 +32,7 @@ func NewImage(width, height int) *DrawObject {
 	i.maxHeight = float64(height)
 	i.maxWidth = float64(width)
 	//i.im = image.NewRGBA(image.Rect(0, 0, int(width), int(height)))
-	gg.NewContext(width, height)
+	i.gC = gg.NewContext(width, height)
 	//i.gC = draw2dimg.NewGraphicContext(i.im)
 
 	white := color.NRGBA{0xff, 0xff, 0xff, 0xff}
