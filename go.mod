@@ -1,4 +1,4 @@
-module github.com/jonha892/drawGraph/v2
+module github.com/jonha892/drawGraph
 
 go 1.18
 
