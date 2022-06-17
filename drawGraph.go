@@ -2,7 +2,6 @@ package drawGraph
 
 import (
 	"bufio"
-	"code.google.com/p/draw2d/draw2d"
 	"errors"
 	"fmt"
 	"image"
@@ -10,6 +9,8 @@ import (
 	"image/png"
 	"log"
 	"os"
+
+	"github.com/llgcode/draw2d"
 )
 
 /*
