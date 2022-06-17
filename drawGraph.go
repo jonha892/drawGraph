@@ -1,14 +1,9 @@
 package drawGraph
 
 import (
-	"bufio"
 	"errors"
-	"fmt"
-	"image"
 	"image/color"
-	"image/png"
 	"log"
-	"os"
 
 	"github.com/fogleman/gg"
 )
@@ -18,7 +13,6 @@ Package to draw 2D graphs (vertecies and lines)
 */
 
 type DrawObject struct {
-	im                  *image.RGBA
 	gC                  *gg.Context
 	maxHeight, maxWidth float64
 }
@@ -53,30 +47,31 @@ func NewImage(width, height int) *DrawObject {
 }
 
 func (i *DrawObject) SaveImage(name string) error {
-	if i.im == nil {
-		return errors.New("Image not available, not initialized!\n")
-	}
-	name = name + ".png"
-	file, err := os.Create(name)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	defer file.Close()
-	outWriter := bufio.NewWriter(file)
-	err = png.Encode(outWriter, i.im)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = outWriter.Flush()
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	fmt.Println("Created " + name)
-	return nil
+	return i.gC.SavePNG(name + ".png")
 }
+
+// func (i *DrawObject) SaveImage(name string) error {
+// 	name = name + ".png"
+// 	file, err := os.Create(name)
+// 	if err != nil {
+// 		log.Println(err)
+// 		return err
+// 	}
+// 	defer file.Close()
+// 	outWriter := bufio.NewWriter(file)
+// 	err = png.Encode(outWriter, i.im)
+// 	if err != nil {
+// 		log.Println(err)
+// 		return err
+// 	}
+// 	err = outWriter.Flush()
+// 	if err != nil {
+// 		log.Println(err)
+// 		return err
+// 	}
+// 	fmt.Println("Created " + name)
+// 	return nil
+// }
 
 func (i *DrawObject) AddPoint(x, y float64) error {
 	if x < 0 || y < 0 {
